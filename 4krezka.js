@@ -1,16 +1,17 @@
 Lampa.Plugin(function(plugin) {
+    // Регистрация источника
     plugin.addSource('4krezka', {
-        title: '4K Rezka',
-        type: 'video',
+        title: '4K Rezka',  // Название источника
+        type: 'video',      // Тип контента
         handler: function(callback, params) {
-            let url = 'https://4krezka.net/'; // URL главной страницы
+            let url = 'https://4krezka.net';  // URL для запроса данных
             fetch(url)
-                .then(response => response.text())
+                .then(response => response.text())  // Получаем HTML контент страницы
                 .then(html => {
-                    let parser = new DOMParser();
+                    let parser = new DOMParser();  // Парсим HTML
                     let doc = parser.parseFromString(html, 'text/html');
 
-                    // Пример: найди элементы фильмов
+                    // Получаем список фильмов или серий
                     let items = [];
                     doc.querySelectorAll('.b-content__inline_items .b-content__inline_item').forEach(item => {
                         let title = item.querySelector('.b-content__inline_item-link').textContent;
@@ -19,15 +20,15 @@ Lampa.Plugin(function(plugin) {
 
                         items.push({
                             title: title,
-                            url: link,
-                            poster: poster
+                            url: link,      // Ссылка на фильм или серию
+                            poster: poster   // Изображение постера
                         });
                     });
 
-                    callback(items);
+                    callback(items);  // Возвращаем обработанные данные
                 })
                 .catch(error => {
-                    console.error('Ошибка парсинга 4krezka.net:', error);
+                    console.error('Ошибка парсинга 4krezka.net:', error);  // Логирование ошибок
                 });
         }
     });
